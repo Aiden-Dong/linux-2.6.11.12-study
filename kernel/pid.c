@@ -131,6 +131,9 @@ int alloc_pidmap(void)
 	return -1;
 }
 
+/**
+ * 从 pid_hash 数组中定位类型为 type, pid=nr 的 pid 结构
+ */
 struct pid * fastcall find_pid(enum pid_type type, int nr)
 {
 	struct hlist_node *elem;
@@ -208,10 +211,13 @@ task_t *find_task_by_pid_type(int type, int nr)
 {
 	struct pid *pid;
 
+	// 从 pid_hash 中找到类型为type, pid=nr的 pid 结构
 	pid = find_pid(type, nr);
 	if (!pid)
 		return NULL;
 
+	// WHY ?
+	// pid 位于 task_struct 中
 	return pid_task(&pid->pid_list, type);
 }
 

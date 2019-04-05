@@ -546,9 +546,12 @@ int set_current_groups(struct group_info *group_info);
 struct audit_context;		/* See audit.c */
 struct mempolicy;
 
+/**
+ * 进程描述符
+ */
 struct task_struct {
-	volatile long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
-	struct thread_info *thread_info;
+	volatile long state;	            /* 进程状态 -1 unrunnable, 0 runnable, >0 stopped */
+	struct thread_info *thread_info;    /* 进程信息 */
 	atomic_t usage;
 	unsigned long flags;	/* per process flags, defined below */
 	unsigned long ptrace;
@@ -571,7 +574,7 @@ struct task_struct {
 	struct sched_info sched_info;
 #endif
 
-	struct list_head tasks;
+	struct list_head tasks;             /* 进程双向链表 */
 	/*
 	 * ptrace_list/ptrace_children forms the list of my children
 	 * that were stolen by a ptracer.
@@ -589,15 +592,17 @@ struct task_struct {
 	/* ??? */
 	unsigned long personality;
 	unsigned did_exec:1;
-	pid_t pid;
-	pid_t tgid;
+
+	pid_t pid;     //
+	pid_t tgid;    // thread group leader 进程ID
+
 	/* 
 	 * pointers to (original) parent process, youngest child, younger sibling,
 	 * older sibling, respectively.  (p->father can be replaced with 
 	 * p->parent->pid)
 	 */
 	struct task_struct *real_parent; /* real parent process (when being debugged) */
-	struct task_struct *parent;	/* parent process */
+	struct task_struct *parent;      /* parent process */
 	/*
 	 * children/sibling forms the list of my children plus the
 	 * tasks I'm ptracing.
@@ -607,7 +612,7 @@ struct task_struct {
 	struct task_struct *group_leader;	/* threadgroup leader */
 
 	/* PID/PID hash table linkage. */
-	struct pid pids[PIDTYPE_MAX];
+	struct pid pids[PIDTYPE_MAX];      // PID hash 表
 
 	struct completion *vfork_done;		/* for vfork() */
 	int __user *set_child_tid;		/* CLONE_CHILD_SETTID */
